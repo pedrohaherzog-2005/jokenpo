@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(const MainApp());
@@ -19,8 +18,6 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
-enum Mao { pedra, papel, tesoura }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -111,10 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery pega o tamanho total da tela do seu navegador
-    final larguraTela = MediaQuery.of(context).size.width;
-    final alturaTela = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -155,10 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  const Text(
-                    "Escolha uma Opção",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  const Text("Escolha uma Opção", style: TextStyle(fontSize: 18)),
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -177,22 +167,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     endIndent: 20,
                     height: 40,
                   ),
-                  SizedBox(
-                    height: 100,
-                    child: escolhaCPU == null
-                        ? const Icon(Icons.close, size: 100)
-                        : _getIconFor(escolhaCPU!, size: 80),
-                  ),
+                  const Text("Escolha da Máquina:", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  const SizedBox(height: 10),
+                  _getImageWidget(escolhaCPU, height: 150),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: jogar,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE0E0E0),
                       foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 50,
-                        vertical: 15,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       shape: const RoundedRectangleBorder(),
                     ),
                     child: const Text("JOGAR"),
@@ -200,10 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 20),
                   Text(
                     resultado,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -218,10 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(
-          "$score",
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
+        Text("$score", style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -235,34 +213,45 @@ class _HomeScreenState extends State<HomeScreen> {
         resultado = "...";
       }),
       child: Container(
-        width: 70,
-        height: 70,
+        width: 90,
+        height: 90,
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
+          color: Colors.white,
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.black,
+            color: isSelected ? Colors.blue : Colors.black12,
             width: isSelected ? 3 : 1,
           ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        child: _getIconFor(item, size: 40),
+        child: _getImageWidget(item),
       ),
     );
   }
 
-  Widget _getIconFor(ItemsPlayed item, {double size = 40}) {
-    FaIconData icon;
-    switch (item) {
-      case ItemsPlayed.pedra:
-        icon = FontAwesomeIcons.handBackFist;
-        break;
-      case ItemsPlayed.papel:
-        icon = FontAwesomeIcons.hand;
-        break;
-      case ItemsPlayed.tesoura:
-        icon = FontAwesomeIcons.handScissors;
-        break;
+  Widget _getImageWidget(ItemsPlayed? item, {double height = 70}) {
+    String imagePath;
+    
+    if (item == null) {
+      imagePath = "assets/images/inicio.png";
+    } else {
+      switch (item) {
+        case ItemsPlayed.pedra:
+          imagePath = "assets/images/esquilo_pedra.png";
+          break;
+        case ItemsPlayed.papel:
+          imagePath = "assets/images/esquilo_papel.png";
+          break;
+        case ItemsPlayed.tesoura:
+          imagePath = "assets/images/esquilo_tesoura.png";
+          break;
+      }
     }
-    return Center(
-      child: FaIcon(icon, size: size, color: Colors.black87),
+
+    return Image.asset(
+      imagePath,
+      height: height,
+      fit: BoxFit.contain,
     );
   }
 }
